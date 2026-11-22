@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+﻿<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NEXUS-AI · Research Command Center</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -104,7 +104,7 @@ const cv=e=>{const d=devicePixelRatio||1,r=e.getBoundingClientRect(),c=e.getCont
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-'),MC=['#4cc9f0','#8b5cf6','#34d399','#fbbf24','#f472b6','#60a5fa','#fb923c'];
 const STEPS=['Hipótese','Implementação','Testes','Eval protocol','Métricas'];
 /* Edite DONE para refletir o que você realmente concluiu: {'rag':['Hipótese','Implementação']} */
-const DONE={};
+const DONE={"rag":["Implementação","Eval protocol"],"agents":["Implementação","Eval protocol"],"multi-agent-systems":["Implementação"],"tool-calling":["Implementação"],"langchain-langgraph":["Implementação"],"evals":["Eval protocol"],"cost-latency":["Implementação"],"monitoring-observability":["Implementação"],"tool-using-agent":["Implementação"]};
 const MODS=[['foundations','Foundations',['Advanced Python','Linear Algebra','Probability & Statistics','Calculus','Data Structures & Algorithms','Git & GitHub','APIs & REST','SQL','Docker']],
 ['ml_dl','ML & Deep Learning',['Scikit-learn','Neural Networks','PyTorch','Transformers & Attention','Backpropagation','Evaluation & Metrics','Karpathy Zero to Hero','Hugging Face']],
 ['llm_apps','LLM Applications',['Prompt & Context Eng.','Structured Outputs','Embeddings','RAG','Tool Calling','Agents','Vector DBs','LangChain / LangGraph','LlamaIndex','HF Agents']],
@@ -366,3 +366,4 @@ let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>R[cur]&
 addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(R[v]&&v!=cur)go(v)});
 go(R[location.hash.slice(1)]?location.hash.slice(1):'ov');
 </script></body></html>
+

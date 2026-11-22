@@ -5,11 +5,9 @@
 
 **From Mathematical Foundations to Production-Grade AI Systems**
 
-A reproducible AI engineering research platform exploring the complete AI stack — from mathematical foundations and deep learning to LLM applications, autonomous agents, production LLMOps and AI security.
+A reproducible AI engineering research platform covering mathematical foundations, machine learning, deep learning, LLM applications, autonomous agents, LLMOps and AI security.
 
-<br/>
-
-[![Live Demo](https://img.shields.io/badge/🚀_LIVE_DEMO-Explore_NEXUS.AI-00D9FF?style=for-the-badge)](https://kallymeire.github.io/NEXUS.IA/)
+[![Live Dashboard](https://img.shields.io/badge/▶_LIVE_DASHBOARD-00D9FF?style=for-the-badge)](https://kallymeire.github.io/NEXUS.IA/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/kallymeire/NEXUS.IA)
 
 ![Status](https://img.shields.io/badge/Status-Active_Research-00C853?style=flat-square)
@@ -20,64 +18,66 @@ A reproducible AI engineering research platform exploring the complete AI stack 
 
 ---
 
-## 🧠 Research Command Center
+## 🖥️ NEXUS·AI — Interactive Research Command Center
 
 <div align="center">
 
-### Explore the NEXUS·AI Interactive Environment
+**Explore the complete interactive AI engineering environment.**
 
-**A hands-on research environment for understanding, experimenting and evaluating modern AI systems.**
+<a href="https://kallymeire.github.io/NEXUS.IA/">
+  <img src="docs/demo.gif" alt="NEXUS AI Interactive Research Dashboard" width="900">
+</a>
 
-[🌐 OPEN INTERACTIVE DASHBOARD](https://kallymeire.github.io/NEXUS.IA/)
+**[🚀 OPEN LIVE INTERACTIVE DASHBOARD](https://kallymeire.github.io/NEXUS.IA/)**
+
+<sub>Interactive graphs · Training experiments · RAG benchmarks · Agent traces · AI security · Live Ops</sub>
 
 </div>
 
-### 🔬 Research Modules
+---
+
+## 🧠 Research Modules
 
 | Module | Research Focus |
 |:---|:---|
-| 🧮 Foundations | Linear Algebra, Probability, Statistics, Calculus, DSA |
-| 🧠 ML & Deep Learning | Neural Networks, PyTorch, Transformers, Backpropagation |
-| 🤖 LLM Applications | RAG, Embeddings, Agents, Tool Calling, Vector Databases |
-| ⚙️ LLMOps | Monitoring, Evaluation, Cost, Latency, CI/CD |
+| 🧮 Foundations | Python, Linear Algebra, Probability, Statistics, Calculus, DSA |
+| 🧠 ML & Deep Learning | Scikit-learn, Neural Networks, PyTorch, Transformers, Backpropagation |
+| 🤖 LLM Applications | Prompt Engineering, Embeddings, RAG, Agents, Tool Calling |
+| ⚙️ LLMOps | Evaluation, Monitoring, Cost, Latency, CI/CD |
 | 🚀 Advanced AI | LoRA, QLoRA, Multimodal AI, Multi-Agent Systems |
-| 🛡️ AI Security | Prompt Injection, Guardrails, Evaluation, Threat Analysis |
-| 🧪 Research Tools | MLflow, W&B, LangSmith, Phoenix, Hugging Face |
+| 🛡️ AI Security | Guardrails, Prompt Injection, Security Evaluation |
+| 🧪 Portfolio | Structured Output Parser, Production RAG, Tool-using Agent |
 
 ---
 
 ## ⚡ Interactive Research Labs
 
-The dashboard provides interactive experiments and simulated AI engineering workflows.
+The main dashboard includes nine interactive research environments:
 
 | Lab | Capabilities |
 |:---|:---|
-| 🕸️ Knowledge Graph | 58 topics, 7 modules and dependency exploration |
-| 📈 Training Lab | MLP, CNN, Transformer, learning curves and ablation |
-| 🔎 RAG Lab | Retrieval experiments, hybrid search and Vector DB benchmarks |
-| 🤖 Agent Trace | Execution waterfall and prompt-injection simulation |
-| 🔐 AI Security | Guardrails and evaluation metrics |
+| 🧭 Overview | Research overview and LLMOps metrics |
+| 🕸️ Knowledge Graph | 58 topics, 7 modules and dependencies |
+| 📈 Training Lab | MLP, CNN, Transformer, training curves and ablation |
+| 🔎 RAG Lab | Retrieval experiments and Vector DB benchmarks |
+| 🤖 Agents & Security | Agent execution traces and prompt-injection simulation |
 | 🌌 Embedding Space | Interactive 3D embedding visualization |
-| 📡 Live Ops | Simulated production traffic, latency and autoscaling |
-| 🧬 Attention Lab | Interactive attention matrix visualization |
+| 📡 Live Ops | Simulated production traffic and autoscaling |
+| 🧬 Attention Lab | Interactive attention matrix |
 | 🏗️ Architecture | Research pipeline and system architecture |
-
-> **Research note:** Interactive experiments use seeded or synthetic demo data. Production integrations can be connected through MLflow, Weights & Biases and LangSmith.
 
 ---
 
 ## 📊 Engineering & Observability
 
-The platform explores the metrics required to evaluate and operate AI systems.
-
-- Model training and validation loss.
+- Training and validation loss.
 - Validation accuracy.
 - Vector retrieval recall and latency.
 - RAG evaluation.
 - Agent execution traces.
 - Prompt-injection testing.
 - LLMOps cost and latency monitoring.
-- Production SLO simulation.
+- Production performance simulation.
 
 ---
 
@@ -97,8 +97,12 @@ NEXUS.IA/
 │       └── portfolio/
 │
 ├── docs/
+│   ├── index.html          # Main interactive dashboard
+│   ├── demo.gif            # Dashboard demonstration
+│   ├── .nojekyll
+│   │
 │   └── dashboard/
-│       ├── index.html
+│       ├── index.html      # Secondary dashboard
 │       └── data/
 │           └── metrics.json
 │
@@ -162,16 +166,14 @@ Research practices include:
 
 ## 🚀 Getting Started
 
-### Run the interactive dashboard
+### Main interactive dashboard
 
 ```bash
 git clone https://github.com/kallymeire/NEXUS.IA.git
 
 cd NEXUS.IA
 
-python scripts/generate_metrics.py
-
-python -m http.server 8080 -d docs/dashboard
+python -m http.server 8080 -d docs
 ```
 
 Open:
@@ -180,7 +182,15 @@ Open:
 http://localhost:8080
 ```
 
-### Run with Docker
+### Secondary dashboard metrics
+
+```bash
+python scripts/generate_metrics.py
+
+python -m http.server 8081 -d docs/dashboard
+```
+
+### Docker
 
 ```bash
 docker compose up --build
@@ -206,8 +216,6 @@ GitHub Actions automates:
 
 ## 🎯 Research Objectives
 
-NEXUS·AI aims to connect theoretical knowledge with practical AI engineering through:
-
 1. Mathematical foundations for machine learning.
 2. Deep learning implementation and evaluation.
 3. Production-oriented LLM application development.
@@ -223,7 +231,7 @@ NEXUS·AI aims to connect theoretical knowledge with practical AI engineering th
 
 **NEXUS·AI — Researching the Architecture of Intelligence.**
 
-[![Explore Dashboard](https://img.shields.io/badge/ENTER_NEXUS.AI-00D9FF?style=for-the-badge&logo=github&logoColor=black)](https://kallymeire.github.io/NEXUS.IA/)
+[![Explore NEXUS](https://img.shields.io/badge/ENTER_NEXUS.AI-00D9FF?style=for-the-badge&logo=github&logoColor=black)](https://kallymeire.github.io/NEXUS.IA/)
 
 <sub>Built for AI Engineering Research · Reproducibility · Production Systems</sub>
 

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS-AI Command Center</title>
+<style>
+:root{color-scheme:dark;--bg:#07060f;--tx:#eceaff;--mu:#8e89b8;--ln:#ffffff16;--v:#8b5cf6;--c:#22d3ee;--p:#f472b6;--y:#fbbf24;--g:#34d399;--o:#fb923c}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.5 Inter,"Segoe UI",system-ui,sans-serif;color:var(--tx);background:var(--bg);font-variant-numeric:tabular-nums}
+.bg{position:fixed;inset:0;z-index:-1;filter:blur(80px);opacity:.5;overflow:hidden}
+.bg i{position:absolute;width:46vmax;height:46vmax;border-radius:50%;animation:dr 24s ease-in-out infinite alternate}
+.bg i:nth-child(1){background:#6d28d9;left:-12%;top:-22%}.bg i:nth-child(2){background:#0891b2;right:-16%;top:8%;animation-delay:-9s}.bg i:nth-child(3){background:#be185d;left:28%;bottom:-38%;animation-delay:-15s}
+@keyframes dr{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+aside{padding:24px 14px;border-right:1px solid var(--ln);background:#0a0818b0;backdrop-filter:blur(16px);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.logo{font-size:23px;font-weight:800;margin:0 10px;background:linear-gradient(90deg,var(--c),var(--v),var(--p));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mu);font-size:12px;margin:2px 10px 18px}
+aside button{display:flex;gap:10px;align-items:center;font:inherit;color:var(--mu);background:none;border:1px solid transparent;border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left}
+aside button i{width:9px;height:9px;border-radius:50%;background:var(--k);box-shadow:0 0 10px var(--k)}
+aside button:hover{color:var(--tx);background:#ffffff0a}
+aside button[aria-selected=true]{color:#fff;background:#ffffff14;border-color:var(--ln)}
+.foot{margin-top:auto;color:var(--mu);font-size:12px;padding:0 10px}
+.top{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:20px 28px 0}
+.top input[type=search]{flex:1;min-width:200px;font:inherit;color:var(--tx);background:#ffffff0d;border:1px solid var(--ln);border-radius:12px;padding:10px 14px}
+.seg{display:flex;background:#ffffff0d;border:1px solid var(--ln);border-radius:12px;padding:3px}
+.seg button{font:inherit;color:var(--mu);background:none;border:0;border-radius:9px;padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed=true]{color:#fff;background:linear-gradient(90deg,var(--v),var(--p))}
+.src{font-size:12px;color:var(--g);border:1px solid var(--ln);border-radius:99px;padding:4px 12px}
+main{padding:20px 28px 40px}
+.pn{display:none}.pn.on{display:block}
+.row{display:grid;gap:16px;margin-bottom:16px}
+.k5{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}.k2{grid-template-columns:repeat(auto-fit,minmax(360px,1fr))}
+.card{background:linear-gradient(150deg,#ffffff0f,#ffffff05);border:1px solid var(--ln);border-radius:20px;padding:18px;backdrop-filter:blur(12px);position:relative}
+.card h3{margin:0 0 12px;font-size:15px;font-weight:650}
+.kpi{border-top:2px solid var(--k);overflow:hidden}
+.kpi span{color:var(--mu);font-size:12px}.kpi b{display:block;font-size:30px;font-weight:700;line-height:1.15}
+.kpi svg{position:absolute;right:0;bottom:0;width:58%;height:46px;opacity:.9}
+.dl{font-size:12px;font-style:normal;color:var(--mu)}.dl.good{color:var(--g)}.dl.bad{color:var(--p)}
+.ch svg{width:100%;height:auto;display:block}
+.lg{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{font:inherit;font-size:12px;color:var(--tx);background:transparent;border:1px solid var(--c);border-radius:99px;padding:2px 11px;cursor:pointer}.chip.off{opacity:.35;text-decoration:line-through}
+.tip{display:none;position:absolute;pointer-events:none;z-index:5;background:#0b0918f5;border:1px solid var(--ln);border-radius:12px;padding:8px 11px;font-size:12px;min-width:130px}
+.tip i,td i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+#gt{position:fixed}
+.ctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px;color:var(--mu)}
+select{background:#ffffff0d;color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:6px 10px;font:inherit}
+input[type=range]{accent-color:var(--v)}
+#gr{width:100%;height:min(78vh,760px);display:block;cursor:grab;touch-action:none}
+.t{cursor:pointer;transition:r .15s}.t:hover{r:9}.t.d{filter:drop-shadow(0 0 6px currentColor)}
+#gr.q .n{opacity:.12}#gr.q .n.m{opacity:1}
+.bt{height:14px;background:#ffffff12;border-radius:99px;overflow:hidden}.bf{height:100%;border-radius:99px;transition:width .4s}
+.rk{display:grid;grid-template-columns:22px 86px 1fr 40px;gap:8px;align-items:center;margin:8px 0}
+.tr{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;margin:7px 0;cursor:pointer;background:none;border:0;color:var(--tx);font:inherit;width:100%;text-align:left}
+.tt{position:relative;height:24px;background:#ffffff0f;border-radius:8px}
+.tb{position:absolute;top:0;height:100%;border-radius:8px;opacity:0;transition:opacity .3s;display:flex;align-items:center;padding-left:7px;font-size:11px;font-weight:700;color:#0b0918;white-space:nowrap;overflow:hidden}.tb.s{opacity:1}
+.btn{font:inherit;color:var(--tx);background:#ffffff12;border:1px solid var(--ln);border-radius:10px;padding:7px 14px;cursor:pointer}
+table{width:100%;border-collapse:collapse}td,th{padding:7px 4px;text-align:left;border-bottom:1px solid var(--ln)}th{color:var(--mu);font-weight:500}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+@media(max-width:860px){.app{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap}.foot{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.live{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-bottom:16px}
+.big{font-size:28px;font-weight:700}.lw svg{width:100%;height:80px;display:block}
+.pulse{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--g);margin-right:8px;animation:pl 1.4s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 #34d39999}100%{box-shadow:0 0 0 9px #34d39900}}
+.log{font:12px/1.7 ui-monospace,Menlo,monospace;height:200px;overflow:auto;background:#00000045;border-radius:12px;padding:10px;color:#b9b4e6}.log b{color:var(--g)}.log em{color:var(--p);font-style:normal}
+.stg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.st{border:1px solid var(--ln);border-radius:16px;padding:14px;background:#ffffff08;transition:.3s}.st small{color:var(--mu)}.st .bt{margin:10px 0 6px}
+.st.run{border-color:var(--c);box-shadow:0 0 24px #22d3ee44}.st.ok{border-color:#34d39999}
+#cp{position:fixed;inset:0;background:#000b;display:none;align-items:flex-start;justify-content:center;padding-top:14vh;z-index:20}#cp.on{display:flex}
+#cp>div{width:min(560px,92vw);background:#120f26;border:1px solid var(--ln);border-radius:18px;overflow:hidden}
+#ci{width:100%;font:inherit;font-size:16px;color:var(--tx);background:none;border:0;border-bottom:1px solid var(--ln);padding:16px}
+#cu{margin:0;padding:6px 0;max-height:46vh;overflow:auto}#cu li{list-style:none;padding:11px 16px;cursor:pointer;color:var(--mu)}#cu li.a{background:#ffffff14;color:#fff}
+kbd{font:11px ui-monospace,monospace;border:1px solid var(--ln);border-radius:6px;padding:1px 6px;color:var(--mu)}
+</style>
+</head>
+<body>
+<div class="bg"><i></i><i></i><i></i></div>
+<div class="app">
+<aside id="nav"><h1 class="logo">NEXUS-AI</h1><p class="sub">Command center</p><div class="foot">Demo data until metrics.json is regenerated</div></aside>
+<div>
+  <div class="top"><input type="search" id="q" placeholder="Search roadmap topics (opens the graph)" aria-label="Search topics">
+    <div class="seg" id="rg" aria-label="Date range"><button data-r="7">7d</button><button data-r="14">14d</button><button data-r="30" aria-pressed="true">30d</button></div>
+    <button class="btn" id="kb"><kbd>Ctrl K</kbd> Commands</button><span class="src" id="src">embedded demo data</span></div>
+  <main>
+    <section class="pn" id="ov"><div class="row k5" id="kp"></div>
+      <div class="row k2"><div class="card"><h3>Production metrics</h3><div class="ctl"><div class="seg" id="om"><button data-m="pass" aria-pressed="true">Pass rate</button><button data-m="lat">Latency</button><button data-m="cost">Cost</button></div></div><div class="ch" id="oc"></div></div>
+        <div class="card"><h3>Roadmap coverage</h3><div class="ch" id="rd"></div></div></div></section>
+    <section class="pn" id="gp"><div class="card"><h3>Knowledge graph <span style="color:var(--mu);font-weight:400">scroll to zoom, drag to move, click a topic to mark it done</span></h3>
+      <div class="ctl"><button class="btn" id="bs">Load sample progress</button><button class="btn" id="bc">Clear all</button><span>Starts with sample progress. Clear it and mark your own.</span></div><svg id="gr" viewBox="90 90 620 620"><g id="gg"></g></svg></div></section>
+    <section class="pn" id="ml"><div class="card"><h3>Training curves</h3>
+      <div class="ctl">Metric <select id="mm"><option value="loss">Training loss</option><option value="val">Validation loss</option><option value="acc">Accuracy</option></select>
+      Smoothing <input type="range" id="sm" min="0" max="90" value="30" aria-label="Smoothing"></div><div class="ch" id="mc"></div></div>
+      <div class="card"><h3>Final epoch</h3><table><thead><tr><th>Model</th><th>Loss</th><th>Val loss</th><th>Accuracy</th></tr></thead><tbody id="mt"></tbody></table></div></section>
+    <section class="pn" id="rag"><div class="row k2"><div class="card"><h3>Latency vs recall (bubble size is throughput)</h3><div class="ch" id="sc"></div></div>
+      <div><div class="card" id="dp"></div><div class="card"><h3>Which one fits your priority?</h3><div class="ctl">Speed <input type="range" id="dw" min="0" max="100" value="50" aria-label="Speed versus accuracy"> Accuracy</div><div id="dr"></div></div></div></div></section>
+    <section class="pn" id="ag"><div class="card"><h3>Agent trace</h3><div class="ctl"><button class="btn" id="rp">Replay run</button><span>Select a step for details</span></div><div id="tw"></div><p id="td" style="color:var(--mu);margin:10px 0 0">No step selected.</p></div></section>
+  <section class="pn" id="lv"><div class="ctl"><span><i class="pulse"></i>Live stream, simulated. Set STREAM_URL in the script to read your API.</span><button class="btn" id="lp">Pause</button></div><div class="live" id="lk"></div><div class="card"><h3>Event log</h3><div class="log" id="lg2"></div></div></section>
+<section class="pn" id="pl"><div class="card" style="margin-bottom:16px"><h3>Automation pipeline</h3><div class="ctl"><button class="btn" id="pr">Run pipeline</button><label><input type="checkbox" id="pa"> Auto-run every 45 s</label></div><div class="stg" id="ps"></div></div>
+<div class="row k2"><div class="card"><h3>Console</h3><div class="log" id="pc">Press Run pipeline to start.</div></div><div class="card"><h3>Recent runs</h3><table><thead><tr><th>Run</th><th>Result</th><th>Pass rate</th><th>Time</th></tr></thead><tbody id="ph"></tbody></table></div></div></section>
+</main>
+</div></div>
+<div class="tip" id="gt"></div>
+<div id="cp"><div><input id="ci" placeholder="Type a command" aria-label="Command"><ul id="cu"></ul></div></div>
+<script>
+let D=/*DATA*/{"ml": [{"n": "MLP", "loss": [1.0565, 0.9854, 0.9324, 0.862, 0.8165, 0.762, 0.7082, 0.6728, 0.622, 0.5913, 0.548, 0.5148, 0.4902, 0.4691, 0.4278, 0.4044, 0.3888, 0.3732, 0.3452, 0.3224, 0.3161, 0.2809, 0.2816, 0.2557, 0.2393, 0.2261, 0.2182, 0.2174, 0.1945, 0.193, 0.1852, 0.1716, 0.1674, 0.1505, 0.1437, 0.1404, 0.1441, 0.1336, 0.1262, 0.1269], "val": [1.1001, 1.0244, 0.9862, 0.913, 0.8538, 0.8092, 0.754, 0.7291, 0.6739, 0.6299, 0.6074, 0.5483, 0.5327, 0.5218, 0.4624, 0.4491, 0.42, 0.4232, 0.3981, 0.3696, 0.3724, 0.3203, 0.3325, 0.3035, 0.2867, 0.2698, 0.2734, 0.2757, 0.2387, 0.2429, 0.217, 0.2226, 0.2168, 0.2103, 0.1984, 0.1789, 0.1857, 0.1837, 0.1569, 0.1708], "acc": [0.1199, 0.1805, 0.211, 0.2696, 0.317, 0.3526, 0.3968, 0.4167, 0.4609, 0.4961, 0.5141, 0.5614, 0.5738, 0.5826, 0.6301, 0.6407, 0.664, 0.6614, 0.6815, 0.7043, 0.7021, 0.7438, 0.734, 0.7572, 0.7706, 0.7842, 0.7813, 0.7794, 0.809, 0.8057, 0.8264, 0.8219, 0.8266, 0.8318, 0.8413, 0.8569, 0.8514, 0.853, 0.8745, 0.8634]}, {"n": "CNN", "loss": [0.9534, 0.8667, 0.788, 0.7321, 0.6559, 0.6008, 0.5517, 0.5144, 0.456, 0.4249, 0.3921, 0.3673, 0.3375, 0.3126, 0.2775, 0.2591, 0.2389, 0.2321, 0.2179, 0.1876, 0.1753, 0.1648, 0.1544, 0.1499, 0.1434, 0.1291, 0.1169, 0.1189, 0.1121, 0.1108, 0.1139, 0.1044, 0.097, 0.0955, 0.0936, 0.0783, 0.0926, 0.0879, 0.0876, 0.0842], "val": [0.9952, 0.9087, 0.8211, 0.7811, 0.6878, 0.6328, 0.588, 0.5493, 0.4962, 0.4565, 0.4221, 0.4018, 0.3705, 0.3535, 0.3083, 0.3153, 0.2873, 0.2666, 0.2555, 0.228, 0.2162, 0.1985, 0.2099, 0.2097, 0.1874, 0.1736, 0.1495, 0.152, 0.1524, 0.1487, 0.1688, 0.1392, 0.1277, 0.154, 0.1394, 0.1127, 0.1389, 0.1187, 0.1334, 0.1436], "acc": [0.2038, 0.273, 0.3431, 0.3751, 0.4498, 0.4938, 0.5296, 0.5606, 0.603, 0.6348, 0.6623, 0.6786, 0.7036, 0.7172, 0.7534, 0.7478, 0.7702, 0.7867, 0.7956, 0.8176, 0.827, 0.8412, 0.8321, 0.8322, 0.8501, 0.8611, 0.8804, 0.8784, 0.8781, 0.881, 0.865, 0.8886, 0.8978, 0.8768, 0.8885, 0.9098, 0.8889, 0.905, 0.8933, 0.8851]}, {"n": "Transformer", "loss": [1.1673, 1.0298, 0.9034, 0.8021, 0.7073, 0.6397, 0.5649, 0.5084, 0.4454, 0.3959, 0.366, 0.3329, 0.2982, 0.2691, 0.2446, 0.2213, 0.192, 0.181, 0.1631, 0.1436, 0.1323, 0.1273, 0.1182, 0.1192, 0.1177, 0.1016, 0.1062, 0.1026, 0.098, 0.0826, 0.0767, 0.0741, 0.0711, 0.0692, 0.0757, 0.0796, 0.077, 0.0686, 0.0709, 0.0729], "val": [1.1998, 1.0796, 0.9607, 0.8556, 0.7598, 0.684, 0.6003, 0.5621, 0.4854, 0.4499, 0.4251, 0.3748, 0.3402, 0.3275, 0.2963, 0.2564, 0.2258, 0.2155, 0.2202, 0.1978, 0.1667, 0.1821, 0.1776, 0.1689, 0.1582, 0.1481, 0.1401, 0.133, 0.1571, 0.1321, 0.1225, 0.1321, 0.1141, 0.1254, 0.1305, 0.1159, 0.1146, 0.1074, 0.1081, 0.1205], "acc": [0.0402, 0.1363, 0.2314, 0.3155, 0.3922, 0.4528, 0.5198, 0.5503, 0.6117, 0.6401, 0.6599, 0.7002, 0.7278, 0.738, 0.763, 0.7949, 0.8194, 0.8276, 0.8238, 0.8418, 0.8666, 0.8543, 0.8579, 0.8649, 0.8734, 0.8815, 0.8879, 0.8936, 0.8743, 0.8943, 0.902, 0.8943, 0.9087, 0.8997, 0.8956, 0.9073, 0.9083, 0.9141, 0.9135, 0.9036]}], "dbs": [{"n": "Qdrant", "lat": 18, "rec": 0.96, "qps": 920, "cost": 0.4}, {"n": "Chroma", "lat": 26, "rec": 0.92, "qps": 610, "cost": 0.1}, {"n": "Pinecone", "lat": 22, "rec": 0.95, "qps": 780, "cost": 0.9}, {"n": "Weaviate", "lat": 24, "rec": 0.94, "qps": 700, "cost": 0.55}], "ops": {"days": ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "D11", "D12", "D13", "D14", "D15", "D16", "D17", "D18", "D19", "D20", "D21", "D22", "D23", "D24", "D25", "D26", "D27", "D28", "D29", "D30"], "cost": [14.31, 14.32, 13.8, 14.55, 13.7, 13.65, 13.62, 13.83, 13.06, 13.48, 12.8, 12.66, 12.47, 11.68, 12.01, 11.52, 11.12, 11.9, 10.97, 11.15, 11.27, 10.89, 10.43, 10.48, 10.35, 10.44, 9.45, 9.81, 9.26, 9.11], "lat": [946, 921, 916, 919, 919, 882, 883, 867, 859, 861, 837, 833, 821, 839, 816, 818, 813, 763, 772, 786, 770, 719, 709, 720, 688, 689, 670, 697, 695, 693], "pass": [0.785, 0.806, 0.81, 0.799, 0.826, 0.834, 0.817, 0.844, 0.832, 0.84, 0.86, 0.86, 0.845, 0.858, 0.865, 0.865, 0.866, 0.875, 0.892, 0.876, 0.897, 0.898, 0.891, 0.905, 0.919, 0.92, 0.912, 0.945, 0.944, 0.954]}, "trace": [{"n": "plan", "k": "LLM", "t": 0, "d": 320, "i": "Decompose question into 3 sub-tasks"}, {"n": "embed query", "k": "Embeddings", "t": 320, "d": 90, "i": "text-embedding, 1 call"}, {"n": "vector search", "k": "Qdrant", "t": 410, "d": 140, "i": "top_k=8, recall@8 = 0.94"}, {"n": "rerank", "k": "Tool", "t": 550, "d": 210, "i": "cross-encoder reranker"}, {"n": "calc tool", "k": "Tool Calling", "t": 760, "d": 120, "i": "function call with structured JSON args"}, {"n": "guardrail check", "k": "Security", "t": 880, "d": 70, "i": "PII + prompt-injection filter passed"}, {"n": "answer", "k": "LLM", "t": 950, "d": 540, "i": "grounded answer with citations"}]}/*END*/;
+const $=(s,e=document)=>e.querySelector(s),$$=(s,e=document)=>[...e.querySelectorAll(s)];
+const C=['#8b5cf6','#22d3ee','#f472b6','#fbbf24','#34d399','#fb923c','#60a5fa'];
+const R={'Foundations':['Python (Advanced + Async + Testing)','Linear Algebra','Probability & Statistics','Calculus (Basics)','Data Structures & Algorithms','Git + GitHub','APIs & REST','SQL Basics','Docker Basics'],
+'Machine Learning & Deep Learning':['Classical ML (Scikit-learn)','Neural Networks','PyTorch','Transformers & Attention','Backpropagation','Model Evaluation & Metrics','Karpathy Zero to Hero','Hugging Face Transformers'],
+'LLM Application Engineering':['Prompt Engineering','Context Engineering','Structured Outputs','Embeddings','RAG','Tool / Function Calling','Agents','Vector Databases','LangChain / LangGraph','LlamaIndex','Hugging Face Agents'],
+'Production & LLMOps':['Evaluation (Evals)','Monitoring & Observability','Cost & Latency Optimization','FastAPI + Deployment','Docker + Containers','Cloud (AWS / GCP / Azure)','CI/CD for AI','Guardrails & Security','Logging & Tracing','Versioning & Experiment Tracking'],
+'Advanced & Specialization':['Fine-tuning (LoRA / QLoRA)','Open Source Models','Inference Optimization (vLLM)','Multimodal AI','Multi-Agent Systems','AI System Design','AI Security','Model Serving'],
+'Core Tools & Stack':['Python','PyTorch','Hugging Face','FastAPI','Docker','LangSmith / Phoenix','MLflow / W&B','Cloud Platforms'],
+'Portfolio Projects':['Structured Output Parser','Production RAG App (with Evals)','Tool-using Agent','Deployed AI System','Specialized Project']};
+const secs=Object.keys(R),SH=['Foundations','ML & DL','LLM Apps','LLMOps','Advanced','Tools','Portfolio'];
+let done=new Set(),S={r:30,m:'pass',q:'',pin:0};
+const SAMPLE=['Foundations|Python (Advanced + Async + Testing)','Foundations|Git + GitHub','Foundations|APIs & REST','Foundations|SQL Basics','Foundations|Docker Basics','Machine Learning & Deep Learning|Classical ML (Scikit-learn)','Machine Learning & Deep Learning|PyTorch','LLM Application Engineering|Prompt Engineering','LLM Application Engineering|RAG','Core Tools & Stack|Python','Core Tools & Stack|FastAPI','Core Tools & Stack|Docker'];
+try{const s=localStorage.getItem('nexus');done=new Set(s===null?SAMPLE:JSON.parse(s))}catch(e){done=new Set(SAMPLE)}
+const save=()=>{try{localStorage.setItem('nexus',JSON.stringify([...done]))}catch(e){}};
+const pct=s=>R[s].filter(i=>done.has(s+'|'+i)).length/R[s].length*100,total=()=>Object.values(R).flat().filter(i=>[...done].some(k=>k.endsWith('|'+i))).length/Object.values(R).flat().length*100;
+const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const V=[['ov','Overview',C[0]],['gp','Knowledge graph',C[1]],['ml','Models',C[2]],['rag','RAG & vector DBs',C[3]],['ag','Agent traces',C[4]],['lv','Live stream',C[5]],['pl','Pipeline',C[6]]];
+$('#nav').insertAdjacentHTML('afterbegin','');
+$('.sub').insertAdjacentHTML('afterend',V.map(([i,n,c])=>`<button data-v="${i}" style="--k:${c}"><i></i>${n}</button>`).join(''));
+function show(id){try{history.replaceState(null,'','#'+id)}catch(e){}$$('.pn').forEach(p=>p.classList.toggle('on',p.id===id));$$('#nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===id))}
+$('#nav').onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.v)};
+function spark(v,c){const mn=Math.min(...v),mx=Math.max(...v),n=v.length-1||1,P=v.map((x,i)=>`${i/n*100},${40-(x-mn)/(mx-mn||1)*34}`).join(' ');return `<svg viewBox="0 0 100 44" preserveAspectRatio="none"><polygon points="0,44 ${P} 100,44" fill="${c}" opacity=".18"/><polyline points="${P}" fill="none" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`}
+function line(id,series,o={}){
+  const el=$(id),W=620,H=o.h||260,p=40,hid=el._h||(el._h=new Set()),fmt=o.fmt||(v=>v.toFixed(2)),xs=o.x||[],uid=id.slice(1);
+  const vis=series.filter(s=>!hid.has(s.n)),vals=(vis.length?vis:series).flatMap(s=>s.v),n=series[0].v.length;
+  const mn=Math.min(...vals),mx=Math.max(...vals),X=i=>p+i*(W-p-10)/(n-1),Y=v=>H-26-(v-mn)/(mx-mn||1)*(H-44);
+  const path=v=>v.map((y,i)=>i?`C${(X(i-1)+X(i))/2},${Y(v[i-1])} ${(X(i-1)+X(i))/2},${Y(y)} ${X(i)},${Y(y)}`:`M${X(0)},${Y(y)}`).join('');
+  let g=`<defs>${series.map((s,k)=>`<linearGradient id="${uid}${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s.c}" stop-opacity=".45"/><stop offset="1" stop-color="${s.c}" stop-opacity="0"/></linearGradient>`).join('')}</defs>`;
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,y=Y(v);g+=`<line x1="${p}" x2="${W-10}" y1="${y}" y2="${y}" stroke="#ffffff12"/><text x="2" y="${y+4}" fill="#8e89b8" font-size="10">${fmt(v)}</text>`}
+  if(o.ref!=null)g+=`<line x1="${p}" x2="${W-10}" y1="${Y(o.ref)}" y2="${Y(o.ref)}" stroke="#f472b6" stroke-dasharray="5 4"/>`;
+  series.forEach((s,k)=>{if(hid.has(s.n))return;const d=path(s.v);g+=`<path d="${d}L${X(n-1)},${H-26}L${X(0)},${H-26}Z" fill="url(#${uid}${k})"/><path d="${d}" fill="none" stroke="${s.c}" stroke-width="2.6" stroke-linecap="round"/>`});
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}<line class="cur" y1="8" y2="${H-26}" stroke="#fff" stroke-opacity=".35" style="opacity:0"/></svg><div class="tip"></div><div class="lg">${series.map(s=>`<button class="chip${hid.has(s.n)?' off':''}" data-n="${s.n}" style="border-color:${s.c}">${s.n}</button>`).join('')}</div>`;
+  const svg=$('svg',el),tip=$('.tip',el),cur=$('.cur',el);
+  svg.onmousemove=e=>{const b=svg.getBoundingClientRect(),i=Math.max(0,Math.min(n-1,Math.round(((e.clientX-b.left)*W/b.width-p)/((W-p-10)/(n-1)))));cur.setAttribute('x1',X(i));cur.setAttribute('x2',X(i));cur.style.opacity=1;
+    tip.innerHTML=`<b>${xs[i]??i+1}</b>`+vis.map(s=>`<div><i style="background:${s.c}"></i>${s.n}: ${fmt(s.v[i])}</div>`).join('');tip.style.display='block';tip.style.left=Math.min(b.width-150,X(i)*b.width/W+12)+'px';tip.style.top='10px'};
+  svg.onmouseleave=()=>{tip.style.display='none';cur.style.opacity=0};
+  $('.lg',el).onclick=e=>{const k=e.target.dataset.n;if(k){hid.has(k)?hid.delete(k):hid.add(k);line(id,series,o)}};
+}
+let first=true;
+function ov(){
+  const o=D.ops,k=S.r,sl=a=>a.slice(-k),L=a=>a[a.length-1],pa=sl(o.pass),la=sl(o.lat),co=sl(o.cost),dl=a=>(L(a)-a[0])/a[0]*100,rc=D.dbs.map(d=>d.rec);
+  const K=[['Eval pass rate',L(pa)*100,v=>v.toFixed(1)+'%',pa,C[1],dl(pa),1],['p95 latency',L(la),v=>Math.round(v)+' ms',la,C[0],dl(la),-1],['Spend in range',co.reduce((a,b)=>a+b,0),v=>'$'+Math.round(v),co,C[3],dl(co),-1],['Best recall@10',Math.max(...rc)*100,v=>v.toFixed(0)+'%',rc,C[2],0,1],['Roadmap done',total(),v=>Math.round(v)+'%',secs.map(pct),C[4],0,1]];
+  $('#kp').innerHTML=K.map(([l,v,f,s,c,d,g])=>`<div class="card kpi" style="--k:${c}"><span>${l}</span><b>${f(first&&!calm?0:v)}</b>${d?`<em class="dl ${d*g>0?'good':'bad'}">${d>0?'▲':'▼'} ${Math.abs(d).toFixed(1)}% in range</em>`:'<em class="dl">&nbsp;</em>'}${spark(s,c)}</div>`).join('');
+  if(first&&!calm)$$('#kp b').forEach((b,i)=>{const t0=performance.now(),[,v,f]=K[i],st=t=>{const x=Math.min(1,(t-t0)/900);b.textContent=f(v*(1-Math.pow(1-x,3)));if(x<1)requestAnimationFrame(st)};requestAnimationFrame(st)});
+  first=false;
+  const m=S.m,M={pass:['Eval pass rate',pa,C[1],v=>(v*100).toFixed(1)+'%'],lat:['p95 latency',la,C[0],v=>Math.round(v)+' ms'],cost:['Daily cost',co,C[3],v=>'$'+v.toFixed(2)]}[m];
+  line('#oc',[{n:M[0],v:M[1],c:M[2]}],{x:o.days.slice(-k),fmt:M[3],h:400});
+  const N=7,cx=130,cy=130,pt=(i,r)=>{const a=i*2*Math.PI/N-Math.PI/2;return[cx+r*Math.cos(a),cy+r*Math.sin(a)]};
+  $('#rd').innerHTML=`<svg viewBox="0 0 260 260">${[25,50,75,100].map(q=>`<polygon points="${secs.map((_,i)=>pt(i,q*.9).join(',')).join(' ')}" fill="none" stroke="#ffffff16"/>`).join('')}${secs.map((_,i)=>`<line x1="130" y1="130" x2="${pt(i,90)[0]}" y2="${pt(i,90)[1]}" stroke="#ffffff10"/><text x="${pt(i,108)[0]}" y="${pt(i,108)[1]+3}" font-size="9" fill="#8e89b8" text-anchor="middle">${SH[i]}</text>`).join('')}<polygon points="${secs.map((s,i)=>pt(i,Math.max(4,pct(s)*.9)).join(',')).join(' ')}" fill="#8b5cf655" stroke="#a78bfa" stroke-width="2"/>${secs.map((s,i)=>`<circle cx="${pt(i,Math.max(4,pct(s)*.9))[0]}" cy="${pt(i,Math.max(4,pct(s)*.9))[1]}" r="4" fill="${C[i]}"/>`).join('')}</svg>`;
+}
+const pos={};
+function graph(){
+  const cx=400,cy=400,N=secs.length,q=S.q.trim().toLowerCase();let e='',n='';
+  secs.forEach((s,i)=>{const a=i*2*Math.PI/N-Math.PI/2,sx=cx+135*Math.cos(a),sy=cy+135*Math.sin(a),m=R[s].length,w=2*Math.PI/N*.84;
+    e+=`<line x1="${cx}" y1="${cy}" x2="${sx}" y2="${sy}" stroke="${C[i]}" stroke-opacity=".5" stroke-width="2"/>`;
+    R[s].forEach((t,j)=>{const aa=a+(m>1?(j/(m-1)-.5)*w:0),r=255+(j%2)*36,x=cx+r*Math.cos(aa),y=cy+r*Math.sin(aa),k=s+'|'+t,hit=q&&t.toLowerCase().includes(q);
+      e+=`<line x1="${sx}" y1="${sy}" x2="${x}" y2="${y}" stroke="${C[i]}" stroke-opacity=".18"/>`;
+      n+=`<circle class="t n${done.has(k)?' d':''}${hit?' m':''}" data-k="${k}" data-s="${i}" cx="${x}" cy="${y}" r="${hit?10:6.5}" style="color:${C[i]}" fill="${done.has(k)?C[i]:'#0b0918'}" stroke="${C[i]}" stroke-width="2"/>`;
+      if(hit)n+=`<text x="${x}" y="${y-14}" font-size="11" fill="#fff" text-anchor="middle">${t}</text>`});
+    n+=`<g class="n${q&&R[s].some(t=>t.toLowerCase().includes(q))?' m':''}"><circle cx="${sx}" cy="${sy}" r="32" fill="none" stroke="#ffffff14" stroke-width="4"/><circle cx="${sx}" cy="${sy}" r="32" fill="none" stroke="${C[i]}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${pct(s)*2.01} 201" transform="rotate(-90 ${sx} ${sy})"/><circle cx="${sx}" cy="${sy}" r="27" fill="#0b0918" stroke="${C[i]}" stroke-opacity=".6"/><text x="${sx}" y="${sy+3}" font-size="8.5" font-weight="700" fill="#fff" text-anchor="middle">${SH[i]}</text></g>`});
+  n+=`<circle cx="${cx}" cy="${cy}" r="42" fill="#0b0918" stroke="#a78bfa" stroke-width="2.5"/><text x="${cx}" y="${cy-2}" font-size="12" font-weight="800" fill="#fff" text-anchor="middle">NEXUS</text><text x="${cx}" y="${cy+13}" font-size="11" fill="#22d3ee" text-anchor="middle">${Math.round(total())}%</text>`;
+  $('#gg').innerHTML=e+n;$('#gr').classList.toggle('q',!!q);
+}
+(function(){const svg=$('#gr'),gt=$('#gt');let vb=[90,90,620,620],drag=null,moved=0;const set=()=>svg.setAttribute('viewBox',vb.join(' '));
+  svg.onwheel=e=>{e.preventDefault();const b=svg.getBoundingClientRect(),f=e.deltaY>0?1.12:.89,s=Math.min(b.width,b.height)/800,mx=vb[0]+(e.clientX-b.left)/b.width*vb[2],my=vb[1]+(e.clientY-b.top)/b.height*vb[3];vb=[mx-(mx-vb[0])*f,my-(my-vb[1])*f,vb[2]*f,vb[3]*f];set()};
+  svg.onpointerdown=e=>{drag=[e.clientX,e.clientY];moved=0};
+  window.addEventListener('pointerup',()=>drag=null);
+  svg.onpointermove=e=>{if(drag){const b=svg.getBoundingClientRect(),dx=e.clientX-drag[0],dy=e.clientY-drag[1];moved+=Math.abs(dx)+Math.abs(dy);vb[0]-=dx*vb[2]/b.width;vb[1]-=dy*vb[3]/b.height;drag=[e.clientX,e.clientY];set();gt.style.display='none';return}
+    const t=e.target.closest('.t');if(!t){gt.style.display='none';return}const k=t.dataset.k.split('|');gt.innerHTML=`<b>${k[1]}</b><br><span style="color:var(--mu)">${k[0]}, ${done.has(t.dataset.k)?'done':'not done yet'}</span>`;gt.style.display='block';gt.style.left=e.clientX+14+'px';gt.style.top=e.clientY+14+'px'};
+  svg.onclick=e=>{const t=e.target.closest('.t');if(!t||moved>6)return;const k=t.dataset.k;done.has(k)?done.delete(k):done.add(k);save();graph();ov()};
+  svg.onpointerleave=()=>gt.style.display='none'})();
+function mdl(){const m=$('#mm').value,a=+$('#sm').value/100,ema=v=>{let r=[],p=v[0];v.forEach(x=>{p=a*p+(1-a)*x;r.push(p)});return r};
+  line('#mc',D.ml.map((x,i)=>({n:x.n,v:ema(x[m]),c:C[i]})),{x:D.ml[0].loss.map((_,i)=>'epoch '+(i+1)),fmt:m==='acc'?v=>(v*100).toFixed(0)+'%':v=>v.toFixed(3)});
+  $('#mt').innerHTML=D.ml.map((x,i)=>{const e=x.loss.length-1;return `<tr><td><i style="background:${C[i]}"></i>${x.n}</td><td>${x.loss[e]}</td><td>${x.val[e]}</td><td>${(x.acc[e]*100).toFixed(1)}%</td></tr>`}).join('')}
+function rag(){
+  const d=D.dbs,W=560,H=330,p=48,L=d.map(x=>x.lat),Rc=d.map(x=>x.rec),l0=Math.min(...L)-4,l1=Math.max(...L)+4,r0=Math.min(...Rc)-.02,r1=Math.max(...Rc)+.02,X=v=>p+(v-l0)/(l1-l0)*(W-p-20),Y=v=>H-36-(v-r0)/(r1-r0)*(H-56),Q=Math.max(...d.map(x=>x.qps));
+  let g='';for(let i=0;i<=4;i++){const a=l0+(l1-l0)*i/4,b=r0+(r1-r0)*i/4;g+=`<line x1="${X(a)}" x2="${X(a)}" y1="12" y2="${H-36}" stroke="#ffffff10"/><text x="${X(a)}" y="${H-20}" font-size="10" fill="#8e89b8" text-anchor="middle">${a.toFixed(0)} ms</text><line x1="${p}" x2="${W-20}" y1="${Y(b)}" y2="${Y(b)}" stroke="#ffffff10"/><text x="4" y="${Y(b)+3}" font-size="10" fill="#8e89b8">${(b*100).toFixed(0)}%</text>`}
+  $('#sc').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}<text x="${W-20}" y="${H-4}" font-size="10" fill="#8e89b8" text-anchor="end">faster is left, more accurate is up</text>${d.map((x,i)=>`<g class="t" data-i="${i}"><circle cx="${X(x.lat)}" cy="${Y(x.rec)}" r="${12+x.qps/Q*20}" fill="${C[i]}" fill-opacity=".35" stroke="${C[i]}" stroke-width="2.5"/><text x="${X(x.lat)}" y="${Y(x.rec)+4}" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">${x.n}</text></g>`).join('')}</svg>`;
+  const pn=i=>{const x=d[i];S.pin=i;$('#dp').innerHTML=`<h3 style="color:${C[i]}">${x.n}</h3><table><tr><th>p95 latency</th><td>${x.lat} ms</td></tr><tr><th>Recall@10</th><td>${(x.rec*100).toFixed(0)}%</td></tr><tr><th>Throughput</th><td>${x.qps} queries/s</td></tr><tr><th>Cost</th><td>$${x.cost.toFixed(2)} per 1M queries</td></tr></table>`};
+  $('#sc').onclick=e=>{const t=e.target.closest('.t');if(t)pn(+t.dataset.i)};pn(S.pin);
+  const w=$('#dw').value/100,nm=(v,a)=>(v-Math.min(...a))/(Math.max(...a)-Math.min(...a)||1);
+  $('#dr').innerHTML=d.map((x,i)=>({n:x.n,c:C[i],s:w*nm(x.rec,Rc)+(1-w)*(1-nm(x.lat,L))})).sort((a,b)=>b.s-a.s).map((r,i)=>`<div class="rk"><b>${i+1}</b><span>${r.n}</span><div class="bt"><div class="bf" style="width:${15+r.s*85}%;background:${r.c}"></div></div><span>${(r.s*100).toFixed(0)}</span></div>`).join('');
+}
+function ag(rp){
+  const T=D.trace,end=Math.max(...T.map(t=>t.t+t.d)),K=[...new Set(T.map(t=>t.k))];
+  $('#tw').innerHTML=T.map((t,i)=>`<button class="tr" data-i="${i}"><span>${t.n}</span><div class="tt"><div class="tb${rp?'':' s'}" style="left:${t.t/end*100}%;width:${t.d/end*100}%;background:${C[K.indexOf(t.k)]}">${t.d} ms</div></div></button>`).join('');
+  if(rp)$$('.tb').forEach((b,i)=>setTimeout(()=>b.classList.add('s'),calm?0:i*380));
+  $('#tw').onclick=e=>{const b=e.target.closest('.tr');if(!b)return;const t=T[b.dataset.i];$('#td').innerHTML=`<b style="color:var(--tx)">${t.n}</b> (${t.k}, ${t.d} ms, starts at ${t.t} ms): ${t.i}`};
+}
+const all=()=>{ov();graph();mdl();rag();ag()};
+const setR=r=>{S.r=r;$$('#rg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.r==r));ov()};$('#rg').onclick=e=>{if(e.target.dataset.r)setR(+e.target.dataset.r)};
+$('#om').onclick=e=>{const m=e.target.dataset.m;if(!m)return;S.m=m;$$('#om button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));ov()};
+$('#q').oninput=e=>{S.q=e.target.value;if(S.q)show('gp');graph()};
+$('#mm').onchange=mdl;$('#sm').oninput=mdl;$('#dw').oninput=rag;$('#rp').onclick=()=>ag(true);
+const STREAM_URL=''; // e.g. 'http://localhost:8000/live' returning {rps,p95,tps,cost}
+const sample=()=>{done=new Set(SAMPLE);save();graph();ov()},clear=()=>{done.clear();save();graph();ov()};
+$('#bs').onclick=sample;$('#bc').onclick=clear;
+const LV=[['Requests per second',120,28,C[1],v=>Math.round(v)],['p95 latency',690,70,C[0],v=>Math.round(v)+' ms'],['Tokens per second',2400,320,C[2],v=>Math.round(v)],['Cost per minute',.42,.07,C[3],v=>'$'+v.toFixed(2)]].map(([n,b,s,c,f])=>({n,b,s,c,f,v:Array.from({length:60},()=>b+(Math.random()-.5)*s)}));
+const MSG=['<b>ok</b> eval suite passed, pass rate 94.8%','<b>ok</b> semantic cache hit, saved 1.2k tokens','<em>warn</em> latency spike on /rag/query, p95 910 ms','<b>ok</b> autoscaler: replicas 3 to 4','<em>block</em> guardrail rejected a prompt-injection attempt','<b>ok</b> new model version registered in MLflow','<b>ok</b> Qdrant reindex finished in 38 s'];
+let lpz=false;
+$('#lk').innerHTML=LV.map((m,i)=>`<div class="card"><span style="color:var(--mu);font-size:12px">${m.n}</span><div class="big" id="lv${i}"></div><div class="lw" id="lw${i}"></div></div>`).join('');
+function tick(init){if(lpz&&!init)return;
+  if(STREAM_URL&&!init)fetch(STREAM_URL).then(r=>r.json()).then(j=>[j.rps,j.p95,j.tps,j.cost].forEach((x,i)=>{if(x!=null){LV[i].v.push(x);LV[i].v.shift()}})).catch(()=>{});
+  LV.forEach((m,i)=>{if(!init&&!STREAM_URL){const l=m.v[59];m.v.push(Math.max(m.b*.4,l+(m.b-l)*.1+(Math.random()-.5)*m.s*.6));m.v.shift()}$('#lv'+i).textContent=m.f(m.v[59]);$('#lw'+i).innerHTML=spark(m.v,m.c)});
+  if(!init&&!STREAM_URL&&Math.random()<.45){const l=$('#lg2');l.insertAdjacentHTML('beforeend',new Date().toLocaleTimeString()+' '+MSG[Math.random()*MSG.length|0]+'<br>');l.scrollTop=l.scrollHeight}}
+tick(true);setInterval(()=>{if(!document.hidden)tick()},1000);
+$('#lp').onclick=e=>{lpz=!lpz;e.target.textContent=lpz?'Resume':'Pause'};
+const ST=[['Lint & types','ruff, mypy',2.1],['Unit tests','pytest',6.4],['Evals','RAG and agent evals',11.8],['Benchmarks','vector DBs, latency',9.2],['Build image','docker build',14.5],['Deploy dashboard','GitHub Pages',4.3]];
+let running=false,rn=128;
+$('#ps').innerHTML=ST.map((s,i)=>`<div class="st" id="s${i}"><b>${s[0]}</b><br><small>${s[1]}</small><div class="bt"><div class="bf" id="sb${i}" style="width:0;background:${C[i]}"></div></div><small id="sd${i}">waiting</small></div>`).join('');
+const hr=(n,p,t)=>`<tr><td>#${n}</td><td style="color:var(--g)">passed</td><td>${(p*100).toFixed(1)}%</td><td>${t} s</td></tr>`;
+$('#ph').innerHTML=D.ops.pass.slice(-6).reverse().map((p,i)=>hr(rn-i,p,46+(i*7)%13)).join('');
+async function run(){if(running)return;running=true;const lg=$('#pc'),w=ms=>new Promise(r=>setTimeout(r,calm?10:ms)),add=t=>{lg.insertAdjacentHTML('beforeend',t+'<br>');lg.scrollTop=lg.scrollHeight};
+  lg.innerHTML='';ST.forEach((_,i)=>{$('#s'+i).className='st';$('#sb'+i).style.width='0';$('#sd'+i).textContent='waiting'});add('<b>$</b> git push origin main');
+  for(let i=0;i<ST.length;i++){$('#s'+i).className='st run';add(`▶ ${ST[i][0]}: ${ST[i][1]}`);
+    for(let q=0;q<=100;q+=20){$('#sb'+i).style.width=q+'%';$('#sd'+i).textContent=(ST[i][2]*q/100).toFixed(1)+' s';await w(110)}
+    $('#s'+i).className='st ok';add(`<b>✓</b> ${ST[i][0]} finished in ${ST[i][2]} s`)}
+  add('<b>✓ Pipeline complete. Metrics refreshed and dashboard deployed.</b>');rn++;$('#ph').insertAdjacentHTML('afterbegin',hr(rn,D.ops.pass[D.ops.pass.length-1],49));running=false;refresh()}
+$('#pr').onclick=run;setInterval(()=>{if($('#pa').checked)run()},45000);
+const CMD=[...V.map(([i,n])=>['Go to '+n,()=>show(i)]),['Range: last 7 days',()=>setR(7)],['Range: last 14 days',()=>setR(14)],['Range: last 30 days',()=>setR(30)],['Run automation pipeline',()=>{show('pl');run()}],['Pause or resume live stream',()=>$('#lp').click()],['Load sample progress',sample],['Clear progress',clear]];
+let ci=0;
+function cl(){const q=$('#ci').value.toLowerCase(),L=CMD.filter(c=>c[0].toLowerCase().includes(q));ci=Math.max(0,Math.min(ci,L.length-1));$('#cu').innerHTML=L.map((c,i)=>`<li class="${i===ci?'a':''}" data-i="${CMD.indexOf(c)}">${c[0]}</li>`).join('')}
+function cp(o){$('#cp').classList.toggle('on',o);if(o){$('#ci').value='';ci=0;cl();$('#ci').focus()}}
+document.addEventListener('keydown',e=>{const on=$('#cp').classList.contains('on');
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();cp(!on)}else if(e.key==='Escape')cp(false);
+  else if(on){const n=$$('#cu li').length;if(e.key==='ArrowDown'){ci=(ci+1)%n;cl();e.preventDefault()}else if(e.key==='ArrowUp'){ci=(ci-1+n)%n;cl();e.preventDefault()}else if(e.key==='Enter'){const li=$$('#cu li')[ci];if(li){CMD[li.dataset.i][1]();cp(false)}}}});
+$('#ci').oninput=()=>{ci=0;cl()};$('#cu').onclick=e=>{const li=e.target.closest('li');if(li){CMD[li.dataset.i][1]();cp(false)}};
+$('#cp').onclick=e=>{if(e.target.id==='cp')cp(false)};$('#kb').onclick=()=>cp(true);
+function refresh(){fetch('data/metrics.json?'+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(j=>{D=j;$('#src').textContent='live · updated '+new Date().toLocaleTimeString();all()}).catch(()=>{})}
+const hv=location.hash.slice(1);show(V.some(v=>v[0]===hv)?hv:'ov');all();refresh();setInterval(refresh,30000);
+</script>
+</body>
+</html>

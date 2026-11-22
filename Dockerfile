@@ -1,0 +1,6 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+ENV PYTHONPATH=/app/src
+CMD ["uvicorn","nexus.api:app","--host","0.0.0.0","--port","8000"]

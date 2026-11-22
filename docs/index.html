@@ -1,4 +1,4 @@
-﻿<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NEXUS-AI · Research Command Center</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -84,7 +84,7 @@ main{position:relative;z-index:1}nav{z-index:2;background:color-mix(in srgb,var(
 <div class="g21"><canvas id="rc" style="height:320px"></canvas><div id="rd"></div></div></div>
 <div class="c"><div class="hd"><h3>Hybrid retrieval · fusão lexical + densa</h3><span class="tag">retriever de brinquedo para ilustrar a fusão</span></div><div class="row"><input id="q" value="how does LoRA cut fine-tuning memory" style="flex:1;min-width:220px"><label>α <span class="mono">BM25</span> <input type="range" id="al" min="0" max="100" value="50"> <span class="mono">dense</span></label></div><div id="hr"></div></div></section>
 <section id="ag"><div class="c"><div class="hd"><h3>Agent trace · waterfall de spans</h3><div class="row"><label><input type="checkbox" id="atk"> injetar ataque de prompt-injection</label><button class="pri" id="rp">Replay</button></div></div><div id="gt"></div><div class="mono" id="sp" style="margin-top:8px"></div></div>
-<div class="c"><div class="hd"><h3>Evals &amp; AI Security · IC 95% bootstrap (n=200 prompts, demo)</h3><label><input type="checkbox" id="gon" checked> guardrails ativos</label></div><div id="evs"></div></div></section>
+<div class="c"><div class="hd"><h3>Evals &amp; AI Security · IC 95% bootstrap (n=200 prompts, demo)</h3><label><input type="checkbox" id="gon" checked> guardrails ativos</label></div><div id="evs"></div></div><div class="c"><div class="hd"><h3>Avaliação real · AgentFlow</h3><span class="tag" id="rtag" style="color:var(--gr);border-color:var(--gr)">dados reais</span></div><div id="rl"><p class="sub">Carregando…</p></div></div></section>
 <section id="em"><div class="c"><div class="hd"><h3>Embedding Space · 420 chunks em 3D · arraste, role para zoom, clique para buscar vizinhos</h3><span class="tag">projeção sintética</span></div>
 <div class="row"><label>vizinhos k <input type="range" id="ek" min="3" max="25" value="10"> <b id="ekv">10</b></label><label>separação <input type="range" id="es" min="0" max="2" step=".05" value="1"></label><label><input type="checkbox" id="ea" checked> auto-rotação</label><input id="eq" placeholder="destacar tópico (ex.: rag)" style="width:210px"></div><div class="seg" id="eleg" style="margin:8px 0"></div>
 <div class="g21"><canvas id="ec" style="height:520px;cursor:grab;touch-action:none"></canvas><div id="ed"></div></div></div></section>
@@ -116,7 +116,7 @@ const X=[['Backpropagation','PyTorch'],['Transformers & Attention','LoRA / QLoRA
 const ST={};Object.entries(DONE).forEach(([k,v])=>ST[k]=new Set(v));
 const prog=id=>(ST[id]?ST[id].size:0)/5;
 let cur='ov';const R={};
-function go(v){cur=v;$$('section').forEach(s=>s.classList.toggle('on',s.id==v));$$('nav button[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v==v));history.replaceState(null,'','#'+v);requestAnimationFrame(()=>R[v]&&R[v]())}
+function go(v){cur=v;$$('section').forEach(s=>s.classList.toggle('on',s.id==v));$$('nav button[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v==v));try{history.replaceState(null,'','#'+v)}catch(e){}requestAnimationFrame(()=>R[v]&&R[v]())}
 $$('nav button[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));$$('[data-go]').forEach(b=>b.onclick=()=>{go(b.dataset.go);if(b.dataset.go=='ag')replay()});
 function line(el,S,p=1,fmt=v=>v.toFixed(2)){const{c,w,h}=cv(el),L=40,B=8,T=8,Rr=8;c.clearRect(0,0,w,h);const a=S.flatMap(s=>s.y);let lo=Math.min(...a),hi=Math.max(...a);const pd=(hi-lo)*.1||1;lo-=pd;hi+=pd;
 c.font='10px JetBrains Mono,monospace';c.lineWidth=1;for(let i=0;i<=4;i++){const y=T+(h-T-B)*i/4;c.strokeStyle=V('--bd');c.beginPath();c.moveTo(L,y);c.lineTo(w-Rr,y);c.stroke();c.fillStyle=V('--mut');c.fillText(fmt(hi-(hi-lo)*i/4),2,y+3)}
@@ -215,6 +215,23 @@ function replay(){agent();anim(p=>{cp=p;const c=$('#cur');if(c)c.style.left=p*10
 const EV=[['Faithfulness',.87,.03,.93],['Answer relevance',.91,.02,.93],['Context precision',.84,.04,.88],['Injection robustness',.62,.06,.96],['PII leak prevention',.71,.05,.99],['Toxicity safety',.9,.03,.98]];
 function ev(){const g=$('#gon').checked;$('#evs').innerHTML=EV.map(([n,b,ci,gd])=>{const v=g?gd:b,e=ci*(g?.6:1);return `<div class="ev"><span>${n}</span><div class="bar"><i style="width:${v*100}%;background:${v>.9?'var(--gr)':v>.8?'var(--ac)':'var(--rd)'}"></i><em style="left:${(v-e)*100}%;width:${e*200}%"></em>${g?`<b style="left:${b*100}%" title="baseline"></b>`:''}</div><span class="mono">${(v*100).toFixed(0)}%</span></div>`}).join('')+'<div class="mono">Barra fina = IC 95% · traço vertical = baseline sem guardrails.</div>'}
 $('#atk').onchange=replay;$('#rp').onclick=replay;$('#gon').onchange=ev;R.ag=agent;
+/* ===== Avaliação real (AgentFlow) · lê data/avaliacao.json gerado pelo avaliar.py ===== */
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function real(){const e=$('#rl');if(!e)return;
+fetch('data/avaliacao.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
+const tk=d.tokens.entrada+d.tokens.saida,dt=(d.gerado_em||'').replace('T',' ').slice(0,16);
+$('#rtag').textContent='dados reais · '+esc(d.modelo)+' · '+dt+' UTC';
+const K=[['Perguntas corretas',d.passaram+' / '+d.total,d.passaram==d.total?'var(--gr)':'var(--am)'],['Agente + palavras-chave',d.acertos_palavras+' / '+d.total,'var(--ac)'],['Juiz (significado)',d.juiz.acertos+' / '+d.juiz.avaliados,'var(--vi)'],['Tokens totais',tk.toLocaleString('pt-BR'),'var(--tx)']];
+e.innerHTML='<div class="g4">'+K.map(k=>`<div class="c"><div class="sub">${k[0]}</div><div class="kv" style="font-size:26px;color:${k[2]}">${k[1]}</div></div>`).join('')+'</div>'
++'<div class="mono" style="margin:8px 0">erros de chamada: '+d.erros+' · divergências palavras-chave × juiz: '+d.divergencias+' · '+esc(d.projeto)+'</div>'
++'<div style="overflow:auto"><table><tr><th>#</th><th>Pergunta</th><th>Agente (esperado → escolhido)</th><th>Palavras</th><th>Juiz</th><th>Resultado</th><th>Tokens</th></tr>'
++d.casos.map(c=>{const r=c.erro?['ERRO','var(--am)']:c.passou?['passou','var(--gr)']:['falhou','var(--rd)'],j=c.juiz_ok==null?'n/d':c.juiz_ok?'sim':'não',p=c.palavras_ok==null?'-':c.palavras_ok?'sim':'não';
+return `<tr title="${esc(c.motivo)}"><td class="mono">${c.n}</td><td>${esc(c.pergunta)}</td><td class="mono">${esc(c.agente_esperado)} → ${esc(c.agente??'-')}</td><td>${p}</td><td>${j}</td><td style="color:${r[1]}">${r[0]}</td><td class="mono">${c.tokens}</td></tr>`}).join('')
++'</table></div><div class="mono" style="margin-top:6px">Passe o mouse numa linha para ver o motivo do juiz. Fonte: avaliar.py do AgentFlow.</div>'
+}).catch(()=>{$('#rtag').textContent='sem dados';$('#rtag').style.color='var(--am)';$('#rtag').style.borderColor='var(--am)';
+e.innerHTML='<p class="sub">Ainda não há resultados reais. Rode o <span class="mono">avaliar.py</span> do AgentFlow e copie o <span class="mono">avaliacao.json</span> gerado para <span class="mono">docs/data/avaliacao.json</span>. (Abrir o arquivo direto, sem servidor, também bloqueia a leitura.)</p>'})}
+const ra=R.ag;R.ag=()=>{ra();real()};
+
 /* ===== Embedding space ===== */
 const EP=[];{const r=rng(11);MODS.forEach((m,i)=>{const a=i*2.4;for(let k=0;k<60;k++){const g=()=>(r()+r()+r()-1.5)*.8;EP.push({m:i,t:m[2][k%m[2].length],cx:Math.cos(a)*1.5,cy:(i/6-.5)*2.4,cz:Math.sin(a)*1.5,dx:g(),dy:g(),dz:g()})}})}
 let E={ry:.6,rx:.35,z:1,sel:-1,hov:-1,off:new Set(),nn:[],mv:0,dr:0,lx:0,ly:0};
@@ -366,4 +383,3 @@ let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>R[cur]&
 addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(R[v]&&v!=cur)go(v)});
 go(R[location.hash.slice(1)]?location.hash.slice(1):'ov');
 </script></body></html>
-

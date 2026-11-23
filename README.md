@@ -152,7 +152,7 @@ NEXUS.IA/
 - [ ] Traces reais de agentes via LangSmith / Phoenix
 - [ ] Benchmark de Vector DBs medido, não modelado
 - [ ] Relatórios técnicos por módulo (`research/reports/`)
-- [ ] Comentário automático no Pull Request com as métricas
+- [x] Comentário automático no Pull Request com as métricas
 
 ## ⚠️ Limitações
 

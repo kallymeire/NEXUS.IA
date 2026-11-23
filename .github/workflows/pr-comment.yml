@@ -25,7 +25,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const dados = fs.readFileSync('data/metrics.json', 'utf8');
+            const dados = fs.readFileSync('docs/data/metrics.json', 'utf8');
             const corpo = `## 📊 Métricas do painel\n\n<details><summary>metrics.json</summary>\n\n\`\`\`json\n${dados.slice(0, 6000)}\n\`\`\`\n\n</details>`;
             await github.rest.issues.createComment({
               ...context.repo,

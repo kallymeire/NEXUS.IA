@@ -150,7 +150,7 @@ NEXUS.IA/
 - [x] Card de avaliação real do AgentFlow (13 casos, agente + palavras-chave + juiz por significado)
 - [ ] Trocar os dados simulados por execuções reais (MLflow / W&B)
 - [ ] Traces reais de agentes via LangSmith / Phoenix
-- [ ] Benchmark de Vector DBs medido, não modelado
+- [x] Benchmark de Vector DBs medido, não modelado
 - [ ] Relatórios técnicos por módulo (`research/reports/`)
 - [x] Comentário automático no Pull Request com as métricas
 

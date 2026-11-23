@@ -1,0 +1,34 @@
+name: Métricas no PR
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  comentar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Gerar métricas
+        run: python scripts/generate_metrics.py
+
+      - name: Comentar no PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const dados = fs.readFileSync('docs/dashboard/data/metrics.json', 'utf8');
+            const corpo = `## 📊 Métricas do painel\n\n<details><summary>metrics.json</summary>\n\n\`\`\`json\n${dados.slice(0, 6000)}\n\`\`\`\n\n</details>`;
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body: corpo,
+            });

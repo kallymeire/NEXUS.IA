@@ -25,10 +25,49 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const dados = fs.readFileSync('docs/dashboard/data/metrics.json', 'utf8');
-            const corpo = `## 📊 Métricas do painel\n\n<details><summary>metrics.json</summary>\n\n\`\`\`json\n${dados.slice(0, 6000)}\n\`\`\`\n\n</details>`;
-            await github.rest.issues.createComment({
+            const m = JSON.parse(fs.readFileSync('docs/dashboard/data/metrics.json', 'utf8'));
+            const last = (a) => a[a.length - 1];
+            const pct = (x) => (x * 100).toFixed(1) + '%';
+            const marker = '<!-- metricas-painel -->';
+
+            const L = [marker, '## 📊 Métricas do painel', ''];
+            L.push('> Dados **simulados** (seed fixo), gerados por `scripts/generate_metrics.py`.', '');
+
+            L.push('### Training Lab (última época)', '');
+            L.push('| Modelo | Loss treino | Loss validação | Acurácia |');
+            L.push('|---|---|---|---|');
+            for (const r of m.ml) {
+              L.push('| ' + r.n + ' | ' + last(r.loss).toFixed(3) + ' | ' + last(r.val).toFixed(3) + ' | ' + pct(last(r.acc)) + ' |');
+            }
+
+            L.push('', '### Bancos vetoriais (modelados)', '');
+            L.push('| Banco | Latência (ms) | Recall | QPS | Custo |');
+            L.push('|---|---|---|---|---|');
+            for (const d of m.dbs) {
+              L.push('| ' + d.n + ' | ' + d.lat + ' | ' + pct(d.rec) + ' | ' + d.qps + ' | ' + d.cost + ' |');
+            }
+
+            const o = m.ops;
+            const n = o.days.length;
+            L.push('', '### Live Ops (' + n + ' dias)', '');
+            L.push('| Métrica | ' + o.days[0] + ' | ' + o.days[n - 1] + ' |');
+            L.push('|---|---|---|');
+            L.push('| Custo | ' + o.cost[0] + ' | ' + last(o.cost) + ' |');
+            L.push('| Latência (ms) | ' + o.lat[0] + ' | ' + last(o.lat) + ' |');
+            L.push('| Taxa de aprovação | ' + pct(o.pass[0]) + ' | ' + pct(last(o.pass)) + ' |');
+
+            const tr = last(m.trace);
+            L.push('', '### Agent trace', '');
+            L.push(m.trace.length + ' etapas, ' + (tr.t + tr.d) + ' ms no total.');
+
+            const body = L.join('\n');
+            const { data: comments } = await github.rest.issues.listComments({
               ...context.repo,
               issue_number: context.issue.number,
-              body: corpo,
             });
+            const old = comments.find((c) => c.body && c.body.includes(marker));
+            if (old) {
+              await github.rest.issues.updateComment({ ...context.repo, comment_id: old.id, body });
+            } else {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
+            }

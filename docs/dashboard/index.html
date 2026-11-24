@@ -181,11 +181,11 @@ function mdl(){const m=$('#mm').value,a=+$('#sm').value/100,ema=v=>{let r=[],p=v
 function rag(){
   const d=D.dbs,W=560,H=330,p=48,L=d.map(x=>x.lat),Rc=d.map(x=>x.rec),l0=Math.min(...L)-4,l1=Math.max(...L)+4,r0=Math.min(...Rc)-.02,r1=Math.max(...Rc)+.02,X=v=>p+(v-l0)/(l1-l0)*(W-p-20),Y=v=>H-36-(v-r0)/(r1-r0)*(H-56),Q=Math.max(...d.map(x=>x.qps));
   let g='';for(let i=0;i<=4;i++){const a=l0+(l1-l0)*i/4,b=r0+(r1-r0)*i/4;g+=`<line x1="${X(a)}" x2="${X(a)}" y1="12" y2="${H-36}" stroke="#ffffff10"/><text x="${X(a)}" y="${H-20}" font-size="10" fill="#8e89b8" text-anchor="middle">${a.toFixed(0)} ms</text><line x1="${p}" x2="${W-20}" y1="${Y(b)}" y2="${Y(b)}" stroke="#ffffff10"/><text x="4" y="${Y(b)+3}" font-size="10" fill="#8e89b8">${(b*100).toFixed(0)}%</text>`}
-  $('#sc').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}<text x="${W-20}" y="${H-4}" font-size="10" fill="#8e89b8" text-anchor="end">faster is left, more accurate is up</text>${d.map((x,i)=>`<g class="t" data-i="${i}"><circle cx="${X(x.lat)}" cy="${Y(x.rec)}" r="${12+x.qps/Q*20}" fill="${C[i]}" fill-opacity=".35" stroke="${C[i]}" stroke-width="2.5"/><text x="${X(x.lat)}" y="${Y(x.rec)+4}" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">${x.n}</text></g>`).join('')}</svg>`;
-  const pn=i=>{const x=d[i];S.pin=i;$('#dp').innerHTML=`<h3 style="color:${C[i]}">${x.n}</h3><table><tr><th>p95 latency</th><td>${x.lat} ms</td></tr><tr><th>Recall@10</th><td>${(x.rec*100).toFixed(0)}%</td></tr><tr><th>Throughput</th><td>${x.qps} queries/s</td></tr><tr><th>Cost</th><td>$${x.cost.toFixed(2)} per 1M queries</td></tr></table>`};
+  $('#sc').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}<text x="${W-20}" y="${H-4}" font-size="10" fill="#8e89b8" text-anchor="end">faster is left, more accurate is up</text>${d.map((x,i)=>`<g class="t" data-i="${i}"><circle cx="${X(x.lat)}" cy="${Y(x.rec)}" r="${12+x.qps/Q*20}" fill="${C[i%C.length]}" fill-opacity=".35" stroke="${C[i%C.length]}" stroke-width="2.5"/><text x="${X(x.lat)}" y="${Y(x.rec)+4}" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">${x.n}</text></g>`).join('')}</svg>`;
+  const pn=i=>{if(i>=d.length)i=0;const x=d[i];S.pin=i;$('#dp').innerHTML=`<h3 style="color:${C[i%C.length]}">${x.n}</h3><table><tr><th>p95 latency</th><td>${Math.round(x.lat*10)/10} ms</td></tr><tr><th>Recall@10</th><td>${(x.rec*100).toFixed(1)}%</td></tr><tr><th>Throughput</th><td>${x.qps} queries/s</td></tr>${x.build!=null?`<tr><th>Build time</th><td>${x.build} s</td></tr>`:`<tr><th>Cost</th><td>$${(x.cost||0).toFixed(2)} per 1M queries</td></tr>`}</table>`};
   $('#sc').onclick=e=>{const t=e.target.closest('.t');if(t)pn(+t.dataset.i)};pn(S.pin);
   const w=$('#dw').value/100,nm=(v,a)=>(v-Math.min(...a))/(Math.max(...a)-Math.min(...a)||1);
-  $('#dr').innerHTML=d.map((x,i)=>({n:x.n,c:C[i],s:w*nm(x.rec,Rc)+(1-w)*(1-nm(x.lat,L))})).sort((a,b)=>b.s-a.s).map((r,i)=>`<div class="rk"><b>${i+1}</b><span>${r.n}</span><div class="bt"><div class="bf" style="width:${15+r.s*85}%;background:${r.c}"></div></div><span>${(r.s*100).toFixed(0)}</span></div>`).join('');
+  $('#dr').innerHTML=d.map((x,i)=>({n:x.n,c:C[i%C.length],s:w*nm(x.rec,Rc)+(1-w)*(1-nm(x.lat,L))})).sort((a,b)=>b.s-a.s).map((r,i)=>`<div class="rk"><b>${i+1}</b><span>${r.n}</span><div class="bt"><div class="bf" style="width:${15+r.s*85}%;background:${r.c}"></div></div><span>${(r.s*100).toFixed(0)}</span></div>`).join('');
 }
 function ag(rp){
   const T=D.trace,end=Math.max(...T.map(t=>t.t+t.d)),K=[...new Set(T.map(t=>t.k))];
@@ -229,10 +229,26 @@ function cl(){const q=$('#ci').value.toLowerCase(),L=CMD.filter(c=>c[0].toLowerC
 function cp(o){$('#cp').classList.toggle('on',o);if(o){$('#ci').value='';ci=0;cl();$('#ci').focus()}}
 document.addEventListener('keydown',e=>{const on=$('#cp').classList.contains('on');
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();cp(!on)}else if(e.key==='Escape')cp(false);
-  else if(on){const n=$$('#cu li').length;if(e.key==='ArrowDown'){ci=(ci+1)%n;cl();e.preventDefault()}else if(e.key==='ArrowUp'){ci=(ci-1+n)%n;cl();e.preventDefault()}else if(e.key==='Enter'){const li=$$('#cu li')[ci];if(li){CMD[li.dataset.i][1]();cp(false)}}}});
+  else if(osn){const n=$$('#cu li').length;if(e.key==='ArrowDown'){ci=(ci+1)%n;cl();e.preventDefault()}else if(e.key==='ArrowUp'){ci=(ci-1+n)%n;cl();e.preventDefault()}else if(e.key==='Enter'){const li=$$('#cu li')[ci];if(li){CMD[li.dataset.i][1]();cp(false)}}}});
 $('#ci').oninput=()=>{ci=0;cl()};$('#cu').onclick=e=>{const li=e.target.closest('li');if(li){CMD[li.dataset.i][1]();cp(false)}};
 $('#cp').onclick=e=>{if(e.target.id==='cp')cp(false)};$('#kb').onclick=()=>cp(true);
-function refresh(){fetch('data/metrics.json?'+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(j=>{D=j;$('#src').textContent='live · updated '+new Date().toLocaleTimeString();all()}).catch(()=>{})}
+function loadDbs(){
+  fetch('data/vectordb.json?'+Date.now())
+    .then(r=>r.ok?r.json():Promise.reject())
+    .then(j=>{
+      const a=j.results;
+      if(!Array.isArray(a)||!a.length)return;
+      D.dbs=a.map(x=>({n:x.backend,lat:x.p95_ms,rec:x.recall_at_10,qps:x.qps,cost:0,build:x.build_s}));
+      $('#src').textContent='live · vector DBs medidos';
+      rag();ov();
+    })
+    .catch(()=>{});
+}
+function refresh(){
+  fetch('data/metrics.json?'+Date.now()).then(r=>r.ok?r.json():Promise.reject())
+    .then(j=>{D=j;$('#src').textContent='live · updated '+new Date().toLocaleTimeString();all()})
+    .catch(()=>{}).finally(loadDbs);
+}
 const hv=location.hash.slice(1);show(V.some(v=>v[0]===hv)?hv:'ov');all();refresh();setInterval(refresh,30000);
 </script>
 </body>

@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 # 🧬 NEXUS·AI
 
@@ -148,7 +148,7 @@ NEXUS.IA/
 - [x] Embedding Space 3D, Live Ops e Attention Lab
 - [x] CI com geração de métricas e testes
 - [x] Card de avaliação real do AgentFlow (13 casos, agente + palavras-chave + juiz por significado)
-- [ ] Trocar os dados simulados por execuções reais (MLflow / W&B)
+- [x] Trocar os dados simulados por execuções reais (MLflow / W&B)
 - [ ] Traces reais de agentes via LangSmith / Phoenix
 - [x] Benchmark de Vector DBs medido, não modelado
 - [ ] Relatórios técnicos por módulo (`research/reports/`)

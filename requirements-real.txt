@@ -1,0 +1,9 @@
+# Dependências extras para os experimentos reais (além do requirements.txt)
+numpy
+scipy
+scikit-learn
+mlflow
+# Opcional: traces no Phoenix local (veja INSTRUCOES.md)
+# arize-phoenix
+# opentelemetry-sdk
+# opentelemetry-exporter-otlp-proto-http
